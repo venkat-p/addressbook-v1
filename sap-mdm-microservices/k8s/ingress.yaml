@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sap-mdm-ingress
+  namespace: sap-mdm
+spec:
+  rules:
+    - host: mdm.example.internal
+      http:
+        paths:
+          - path: /partners
+            pathType: Prefix
+            backend:
+              service:
+                name: business-partner-service
+                port:
+                  number: 80
+          - path: /materials
+            pathType: Prefix
+            backend:
+              service:
+                name: material-service
+                port:
+                  number: 80
+          - path: /sync
+            pathType: Prefix
+            backend:
+              service:
+                name: sap-sync-service
+                port:
+                  number: 80

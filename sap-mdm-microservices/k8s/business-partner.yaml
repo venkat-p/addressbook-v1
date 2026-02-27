@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: business-partner-service
+  namespace: sap-mdm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: business-partner-service
+  template:
+    metadata:
+      labels:
+        app: business-partner-service
+    spec:
+      containers:
+        - name: business-partner-service
+          image: ghcr.io/your-org/business-partner-service:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: business-partner-service
+  namespace: sap-mdm
+spec:
+  selector:
+    app: business-partner-service
+  ports:
+    - port: 80
+      targetPort: 8080
