@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sap-sync-service
+  namespace: sap-mdm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sap-sync-service
+  template:
+    metadata:
+      labels:
+        app: sap-sync-service
+    spec:
+      containers:
+        - name: sap-sync-service
+          image: ghcr.io/your-org/sap-sync-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SAP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sap-sync-config
+                  key: SAP_BASE_URL
+            - name: SAP_CUSTOMER_API_PATH
+              valueFrom:
+                configMapKeyRef:
+                  name: sap-sync-config
+                  key: SAP_CUSTOMER_API_PATH
+            - name: SAP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sap-sync-secrets
+                  key: SAP_API_KEY
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sap-sync-service
+  namespace: sap-mdm
+spec:
+  selector:
+    app: sap-sync-service
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sap-sync-config
+  namespace: sap-mdm
+data:
+  SAP_BASE_URL: "https://sandbox.api.sap.com/s4hanacloud"
+  SAP_CUSTOMER_API_PATH: "/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner"

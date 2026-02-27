@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sap-mdm-ingress
+  namespace: sap-mdm
+spec:
+  rules:
+    - host: sap-mdm.local
+      http:
+        paths:
+          - path: /master-data
+            pathType: Prefix
+            backend:
+              service:
+                name: master-data-service
+                port:
+                  number: 80
+          - path: /sap-sync
+            pathType: Prefix
+            backend:
+              service:
+                name: sap-sync-service
+                port:
+                  number: 80
