@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sap-sync-service
+  namespace: sap-mdm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sap-sync-service
+  template:
+    metadata:
+      labels:
+        app: sap-sync-service
+    spec:
+      containers:
+        - name: sap-sync-service
+          image: ghcr.io/your-org/sap-sync-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SAP_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sap-config
+                  key: sapBaseUrl
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sap-config
+  namespace: sap-mdm
+data:
+  sapBaseUrl: https://my.sap.landscape.example
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sap-sync-service
+  namespace: sap-mdm
+spec:
+  selector:
+    app: sap-sync-service
+  ports:
+    - port: 80
+      targetPort: 8080

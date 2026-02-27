@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: material-service
+  namespace: sap-mdm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: material-service
+  template:
+    metadata:
+      labels:
+        app: material-service
+    spec:
+      containers:
+        - name: material-service
+          image: ghcr.io/your-org/material-service:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: material-service
+  namespace: sap-mdm
+spec:
+  selector:
+    app: material-service
+  ports:
+    - port: 80
+      targetPort: 8080
